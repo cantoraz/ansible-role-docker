@@ -1,0 +1,31 @@
+---
+
+docker_edition: ce
+docker_package: docker-{{ docker_edition }}
+docker_package_state: present 
+
+# Used only for Debian/Ubuntu. Switch 'stable' to 'edge' if needed.
+docker_apt_release_channel: stable
+docker_apt_repository:
+  - deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}
+  # - deb-src [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}
+
+# docker_daemon_json allows you to configure the daemon with the daemon.json file.
+# https://docs.docker.com/engine/reference/commandline/dockerd/#on-linux
+# docker_daemon_json:
+#  hosts:
+#    - "fd://"
+#    - "tcp://0.0.0.0:2376"
+#  log-level: debug
+#  log-driver: json-file
+#  log-opts:
+#      max-file: "3"
+#      max-size: "10m"
+docker_daemon_json:
+  registry-mirrors:
+    - https://registry.docker-cn.com
+
+# List of users to be added to 'docker' system group (disabled by default)
+# SECURITY WARNING: 
+# Be aware that granted users can easily get full root access on the docker host system!
+docker_group_members: []

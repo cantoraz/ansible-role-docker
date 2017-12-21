@@ -1,0 +1,17 @@
+---
+
+- name: Ensure that Docker daemon is configured
+  copy:
+    content: "{{ docker_daemon_json | to_nice_json }}"
+    dest: /etc/docker/daemon.json
+    mode: 0600
+  notify: reload docker
+  when: docker_daemon_json is not none
+
+- name: Ensure that users are added into docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: yes
+  with_items: "{{ docker_group_members }}"
+  when: docker_group_members is defined

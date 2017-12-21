@@ -1,0 +1,11 @@
+---
+
+- include: setup.yml
+
+- name: Ensure that Docker is installed
+  package: name={{ docker_package }} state={{ docker_package_state }}
+
+- include: configure.yml
+
+- name: Ensure that Docker is started and enabled
+  service: name=docker state=started enabled=yes
