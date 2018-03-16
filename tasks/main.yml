@@ -9,3 +9,6 @@
 
 - name: Ensure that Docker is started and enabled
   service: name=docker state=started enabled=yes
+
+- include: docker-compose.yml
+  when: docker_install_compose

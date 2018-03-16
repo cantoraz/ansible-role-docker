@@ -4,6 +4,11 @@ docker_edition: ce
 docker_package: docker-{{ docker_edition }}
 docker_package_state: present 
 
+# Docker Compose options
+docker_install_compose: true
+docker_compose_version: "1.19.0"
+docker_compose_path: /usr/local/bin/docker-compose
+
 # Used only for Debian/Ubuntu. Switch 'stable' to 'edge' if needed.
 docker_apt_release_channel: stable
 docker_apt_repository:
