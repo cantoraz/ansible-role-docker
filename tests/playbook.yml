@@ -1,0 +1,46 @@
+---
+
+- hosts: all
+  vars:
+    docker_install_compose: false
+    docker_apt_repository:
+      - deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}
+    docker_group_members:
+      - "{{ ansible_user_id }}"
+  pre_tasks:
+    - name: Configure System
+      block:
+        # - name: Ensure that hostname is configured
+        #   hostname:
+        #     name: "{{ inventory_hostname }}"
+
+        - name: Disable default APT repository
+          replace:
+            path: /etc/apt/sources.list
+            regexp: '^(deb(?:-src)? .*)$'
+            replace: '#\1'
+          notify: update apt cache
+
+        - name: Add Aliyun APT repository mirror
+          apt_repository:
+            repo: deb https://mirrors.aliyun.com/ubuntu/ {{ item }} main restricted universe multiverse
+            state: present
+            filename: mirrors.aliyun.com
+            update_cache: no
+          with_items:
+            - "{{ ansible_lsb.codename }}-security"
+            - "{{ ansible_lsb.codename }}"
+            - "{{ ansible_lsb.codename }}-updates"
+            # - "{{ ansible_lsb.codename }}-proposed"
+            # - "{{ ansible_lsb.codename }}-backports"
+          notify: update apt cache
+      become: true
+  handlers:
+    # Only update APT cache if the last one is more than 3600 seconds ago 
+    - name: update apt cache
+      apt: update_cache=yes
+      changed_when: no
+      become: true
+  roles:
+    - { role: docker, become: yes }
+  tasks:
