@@ -5,7 +5,7 @@
     content: "{{ docker_daemon_json | to_nice_json }}"
     dest: /etc/docker/daemon.json
     mode: 0600
-  notify: reload docker
+  notify: restart docker
   when: docker_daemon_json is not none
 
 - name: Ensure that users are added into docker group

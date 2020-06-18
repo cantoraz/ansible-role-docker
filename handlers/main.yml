@@ -4,5 +4,5 @@
   apt: update_cache=yes
   changed_when: no
 
-- name: reload docker
-  service: name=docker state=reloaded
+- name: restart docker
+  service: name=docker state=restarted
