@@ -1,14 +1,14 @@
 ---
 
-- include: setup.yml
+- import_tasks: setup.yml
 
 - name: Ensure that Docker is installed
   package: name={{ docker_package }} state={{ docker_package_state }}
 
-- include: configure.yml
+- import_tasks: configure.yml
 
 - name: Ensure that Docker is started and enabled
   service: name=docker state=started enabled=yes
 
-- include: docker-compose.yml
+- include_tasks: docker-compose.yml
   when: docker_install_compose
