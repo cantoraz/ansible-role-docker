@@ -2,18 +2,23 @@
 
 docker_edition: ce
 docker_package: docker-{{ docker_edition }}
-docker_package_state: present 
+docker_package_state: present
 
 # Docker Compose options
 docker_install_compose: true
 docker_compose_version: "1.26.0"
 docker_compose_path: /usr/local/bin/docker-compose
 
+# Docker’s official GPG key
+docker_gpg_key_url: https://download.docker.com/linux/ubuntu/gpg
+docker_gpg_key_dest: /etc/apt/keyrings/docker.asc
+docker_gpg_key_checksum: sha256:1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570
+
 # Used only for Debian/Ubuntu. Switch 'stable' to 'edge' if needed.
 docker_apt_release_channel: stable
 docker_apt_repository:
-  - deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}
-  # - deb-src [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}
+  - deb [arch=amd64 signed-by={{ docker_gpg_key_dest }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}
+  # - deb-src [arch=amd64 signed-by={{ docker_gpg_key_dest }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}
 
 # docker_daemon_json allows you to configure the daemon with the daemon.json file.
 # https://docs.docker.com/engine/reference/commandline/dockerd/#on-linux
